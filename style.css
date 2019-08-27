@@ -1,0 +1,49 @@
+body {
+    font-family: Microsoft JhengHei;
+    background: #E0EFEE;
+}
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    margin-bottom: 30px;
+}
+.demo_title {
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 20px;
+}
+.demo_box textarea{
+    width: 350px;
+    height: 200px; 
+}
+.demo_control {
+    width: 350px;
+    vertical-align:middle;
+    display: tabel-cell;
+    height: 50px;
+}
+.demo_control label{
+    vertical-align: middle;
+}
+.demo_control sub{
+    color: #999;
+    vertical-align: middle;
+}
+.demo_control input{
+    vertical-align: middle;
+}
+.demo_control button{
+    float: right;
+}
+footer{
+    /*position: fixed;
+    bottom:0px;
+    height:50px;
+    width: 99%;
+    text-align: center;
+    */
+    display: flex;
+    justify-content: center;
+}

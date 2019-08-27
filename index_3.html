@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>交通大學語音合成系統</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript">
+        static async fetchAudio(word) {
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "text": word })
+            };
+            let url="http://sl78.speech.cm.nctu.edu.tw:5000/tts2";
+            // fetch() returns a promise that
+            // resolves once headers have been received
+            return fetch(url, requestOptions)
+                .then(res => {
+                    if (!res.ok)
+                        throw new Error(`${res.status} = ${res.statusText}`);
+                    // response.body is a readable stream.
+                    // Calling getReader() gives us exclusive access to
+                    // the stream's content
+                    var reader = res.body.getReader();
+                    // read() returns a promise that resolves
+                    // when a value has been received
+                    return reader
+                        .read()
+                        .then((result) => {
+                            return result;
+                        });
+                })
+        }
+
+        function synthesis(){
+            playBtn = document.getElementById('btn_syn');
+            audio = document.getElementById('audio');
+            
+            playBtn.innerText = "準備中";
+            playBtn.disabled = true;
+            text = document.getElementById('tts-text').value;
+            fetchAudio(text)
+                .then((res) => {
+                    var blob = new Blob([res.value], { type: 'audio/wav' });
+                    var url = window.URL.createObjectURL(blob)
+                    audio.src = url;
+                    audio.load();
+                    audio.play();
+                    /*
+                    window.audio = new Audio();
+                    window.audio.src = url;
+                    window.audio.play();
+                    */
+                })
+                .catch((error) => {
+                        this.setState({
+                                    error: error.message
+                                });
+                    });
+ 
+            playBtn.innerText="合成";
+            playBtn.disabled = false;
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div class="title">
+            <span>交通大學語音合成系統</span>
+        </div>
+        <div class="demo_title">    
+            <span>請輸入要合成的文本：</span>
+        </div>
+        <div class="demo_box">
+            <textarea maxlength="200" class="tts-textarea" id="tts-text"></textarea>
+            <!--<input type="text" id='text' value='交大語音合成' style='width: 500px;'> -->
+        </div>
+        <div class="demo_control">
+            <button onclick='synthesis()' id="btn_syn">合成</button>
+        </div>
+        <div class=demo_audio">
+            <audio controls="controls" preload="none" id="audio">
+            </audio>
+        </div>
+    </div>
+</body>
+</html>

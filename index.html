@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>交通大學語音合成系統</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript">
+        function synthesis(){
+            playBtn = document.getElementById('btn_syn');
+            audio = document.getElementById('audio');
+            
+            playBtn.innerText = "準備中";
+            playBtn.disabled = true;
+            text = document.getElementById('tts-text').value;
+            sr = document.getElementById('tts-sr').value;
+            param = {
+                "text":text,
+                "SR": sr
+            }
+            url="http://sl78.speech.cm.nctu.edu.tw:5000/tts";
+            fetch(url, {
+                method: "POST",
+                headers: {
+                        'Content-Type': 'application/json'
+                      },
+                body: JSON.stringify(param)
+            }).then(function(res) {
+                playBtn.innerText="合成";
+                audio.src = "./ntpu-tts/output.wav?cb="+new Date().getTime();
+                audio.load();
+                audio.play();
+                return res;
+                })
+              .then(function(json) {
+                console.log(json);
+                });
+            
+            playBtn.disabled = false;
+        }
+        function update_val(val){
+            document.getElementById('tts-sr').value = val;
+        }
+        function update_bar(val){
+            // not yet
+            document.getElementById('tts-rng').value = val;
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div class="title">
+            <span>交通大學語音實驗室語音合成系統</span>
+        </div>
+        <div class="demo_title">    
+            <span>請輸入要合成的文本：</span>
+        </div>
+        <div class="demo_box">
+            <textarea maxlength="200" class="tts-textarea" id="tts-text">先帝創業未半，而中道崩殂。今天下三分，益州疲弊，此誠危急存亡之秋也。</textarea>
+        </div>
+        <div class="demo_control">
+            <label>語速 </label>
+            <input class="rng" id="tts-rng" type="range" min="3.3333" max="6.6667" step="0.03" value="5.26" onchange="update_val(this.value)">
+            <input class="rng_text" id="tts-sr" maxlength=4 value="5.26" size="2" onchange="update_bar(this.value)"></input>
+            <sub> syl/sec</sub>
+            <button onclick='synthesis()' id="btn_syn">合成</button>
+        </div>
+        <div class=demo_audio">
+            <audio controls="controls" preload="none" id="audio">
+            </audio>
+        </div>
+    </div>
+    <footer>
+        <small>
+            Copyright © 
+            <a rel="noopener" target="_blank" href="https://sites.google.com/site/nctusplab/home"> NCTU Speech Lab</a>
+            All rights reserved. |
+            UI Design: 
+            <a rel="noopener" target="_blank" href="https://www.linkedin.com/in/han-yun-yeh-02b42b143/">Han-Yun Yeh</a>
+        </small>
+            
+    </footer>
+
+</body>
+</html>
