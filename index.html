@@ -26,11 +26,16 @@
                       },
                 body: JSON.stringify(param)
             }).then(function(res) {
+                return res.blob();
+                })
+              .then(function(blob) {
                 playBtn.innerText="合成";
-                audio.src = "./ntpu-tts/output.wav?cb="+new Date().getTime();
+                blob = new Blob([blob], {type: 'audio/wav'});
+                burl = URL.createObjectURL(blob);
+                audio.src = burl;
                 audio.load();
                 audio.play();
-                return res;
+                return blob;
                 })
               .then(function(json) {
                 console.log(json);
